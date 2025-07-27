@@ -48,6 +48,7 @@ function DataBox({ data }) {
                         // group-box
                         <div className="border rounded-2xl p-5 " key={index}>
 
+
                         {/* group name */}
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold mb-5 mt-2 ">{items?.group_name}</h2>
