@@ -67,6 +67,7 @@ userRouter.patch('/update', async (req, res) => {
     }
 })
 
+// group delete
 userRouter.delete('/delete/:id', async (req, res) => {
     try {
 
@@ -75,6 +76,23 @@ userRouter.delete('/delete/:id', async (req, res) => {
         res.status(200).send('group deleted');
     }
     catch (err) {
+        res.status(400).send(`Error: ${err.message}`);
+    }
+})
+
+// task delete
+userRouter.delete('/deletetask/:tid/:gid' , async(req , res) => {
+    try{
+
+        const { tid , gid} = req.params;
+
+        const group = await TaskData.findById(gid);
+        const allTask = group.TaskData.filter( item => item._id !== tid);
+        
+        // group = allTask
+
+    }
+    catch(err){
         res.status(400).send(`Error: ${err.message}`);
     }
 })
