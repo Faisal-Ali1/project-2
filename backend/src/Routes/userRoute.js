@@ -49,4 +49,38 @@ userRouter.get('/getall' , async(req , res)=>{
     }
 })
 
+userRouter.patch('/update' , async(req , res) => {
+    try{
+            const {id } = req?.body
+
+            if(!id)
+                return res.status(404).send('id is missing');
+
+           const allTask = await TaskData.findById(id);
+
+         const res =  allTask.filter((item) => item._id != id);
+
+         await TaskData.findByIdAndUpdate(id , {res})
+
+            await TaskData.updateOne({group_name} , { $filter})
+    }
+    catch(err){
+        res.status(400).send(`Error: ${err.message}`)
+    }
+})
+
+userRouter.delete('/delete/:id' , async(req , res)=>{
+    try{
+
+        const {id} = req.params;
+        await TaskData.findByIdAndDelete(id);
+        res.status(200).send('group deleted');
+    }
+    catch(err){
+        res.status(400).send(`Error: ${err.message}`);
+    }
+})
+
+
+
 module.exports = userRouter;
