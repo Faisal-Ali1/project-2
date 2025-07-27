@@ -22,6 +22,7 @@ function DataBox({ data }) {
             console.log(id);
             
            await axiosClient.delete(`/delete/${id}`);
+           data.setIsChange(!data);
            
         }
         catch(err){
@@ -37,7 +38,7 @@ function DataBox({ data }) {
         }
 
         fetchData()
-    }, [data]);
+    }, [data.isChange]);
 
     return (
         <>
@@ -69,7 +70,7 @@ function DataBox({ data }) {
 
                                     {
                                         items?.allTask?.map((item, idx) => (
-                                            <tr>
+                                            <tr key={idx}>
                                                
                                                 <td className="text-xs">{idx + 1}.</td>
                                                 <td> <p className=" w-40 font-semibold">{item?.task}</p></td>
