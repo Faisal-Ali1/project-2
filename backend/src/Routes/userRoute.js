@@ -81,32 +81,68 @@ userRouter.delete('/delete/:id', async (req, res) => {
 })
 
 // task delete
-userRouter.post('/deletetask' , async(req , res) => {
-    try{
+userRouter.post('/deletetask', async (req, res) => {
+    try {
 
-        if( !req?.body?.taskId)
+        if (!req?.body?.taskId)
             return res.status(400).send('taskId is missing');
 
-        if( !req?.body?.groupId)
+        if (!req?.body?.groupId)
             return res.status(400).send('groupId is missing');
-       
-         const { taskId , groupId} = req?.body;
+
+        const { taskId, groupId } = req?.body;
 
         const group = await TaskData.findById(groupId);
-        
-        const ans = group?.allTask?.filter( item => item._id != taskId);
+
+        const ans = group?.allTask?.filter(item => item._id != taskId);
 
         // group.allTask = ans;
         // await group.save()
-        
-        await TaskData.findByIdAndUpdate(groupId , {allTask : ans});
+
+        await TaskData.findByIdAndUpdate(groupId, { allTask: ans });
         res.status(200).send("tasked removed sucessfully");
-        
-        
+
+
         // group = allTask
 
     }
-    catch(err){
+    catch (err) {
+        res.status(400).send(`Error: ${err.message}`);
+    }
+})
+
+userRouter.patch('/updatetask/:taskId/:groupId', async(req, res) => {
+
+    try {
+        const { taskId, groupId } = req?.params;
+        
+
+        if (!taskId)
+            return res.status(400).send('id is missing');
+
+        if (!req?.body?.newTask) {
+            return res.status(400).send('enter task for updation');
+        }
+
+        const { newTask } = req?.body;
+
+        const group = await TaskData.findById(groupId);
+
+         group?.allTask?.forEach(item => {
+            if(item._id == taskId){
+                item.task = newTask;
+            }
+       });
+
+     const data =  await TaskData.updateOne( {_id:groupId }, { allTask: group.allTask});
+
+        res.status(200).json({
+            message:"Sucessfully updated",
+            data: data
+        });
+
+    }
+    catch (err) {
         res.status(400).send(`Error: ${err.message}`);
     }
 })

@@ -18,6 +18,17 @@ function DataBox({ data }) {
         }
     }
 
+    const handelTaskUpdate = (taskId , groupId) => {
+        try{
+            console.log(taskId , groupId);
+            
+        }
+        catch(err){
+            console.log('Error: ' , err.message);
+            
+        }
+    }
+
     const handleGroupDelete = async(id) =>{
         try{
             console.log(id);
@@ -80,7 +91,8 @@ function DataBox({ data }) {
                                                     delete
                                                 </button></td>
                                                 <td> <button
-                                                    className="text-blue-500 text-xs cursor-pointer">
+                                                    className="text-blue-500 text-xs cursor-pointer"
+                                                    onClick={()=> handelTaskUpdate(item._id , items._id)}>
                                                     update
                                                 </button></td>
                                                 <td>   <button className="text-yellow-500 tezt-xs cursor-pointer">move</button></td>
