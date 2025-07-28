@@ -58,7 +58,7 @@ function App() {
         </div>
 
         <div className="pt-35">
-          <DataBox data={{isChange , setIsChange}} />
+          <DataBox data={isChange} />
         </div>
 
       </div>

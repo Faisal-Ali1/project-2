@@ -81,13 +81,27 @@ userRouter.delete('/delete/:id', async (req, res) => {
 })
 
 // task delete
-userRouter.delete('/deletetask/:tid/:gid' , async(req , res) => {
+userRouter.post('/deletetask' , async(req , res) => {
     try{
 
-        const { tid , gid} = req.params;
+        if( !req?.body?.taskId)
+            return res.status(400).send('taskId is missing');
 
-        const group = await TaskData.findById(gid);
-        const allTask = group.TaskData.filter( item => item._id !== tid);
+        if( !req?.body?.groupId)
+            return res.status(400).send('groupId is missing');
+       
+         const { taskId , groupId} = req?.body;
+
+        const group = await TaskData.findById(groupId);
+        
+        const ans = group?.allTask?.filter( item => item._id != taskId);
+
+        // group.allTask = ans;
+        // await group.save()
+        
+        await TaskData.findByIdAndUpdate(groupId , {allTask : ans});
+        res.status(200).send("tasked removed sucessfully");
+        
         
         // group = allTask
 

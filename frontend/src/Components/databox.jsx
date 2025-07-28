@@ -4,11 +4,12 @@ import axiosClient from "../utils/axiosClient";
 function DataBox({ data }) {
 
     const [task, setTask] = useState(null);
+    const [change , setChange] = useState(false);
 
-    const handleDelete = async (taskId, groupId) => {
+    const handleTaskDelete = async (taskId, groupId) => {
         try {
-            // await axiosClient.delete('/')
-            console.log(`taskid : ${taskId} , \n groupid: ${groupId}`);
+            await axiosClient.post('/deletetask', {taskId , groupId});
+            setChange(!change);
 
         }
         catch (err) {
@@ -22,7 +23,7 @@ function DataBox({ data }) {
             console.log(id);
             
            await axiosClient.delete(`/delete/${id}`);
-           data.setIsChange(!data);
+           setChange(!change);
            
         }
         catch(err){
@@ -38,17 +39,15 @@ function DataBox({ data }) {
         }
 
         fetchData()
-    }, [data.isChange]);
+    }, [data , change]);
 
     return (
         <>
-            <div className="border flex gap-10 flex-wrap justify-center p-10 text-center">
+            <div className=" flex gap-10 flex-wrap justify-center p-10 text-center">
                 {
                     task?.map((items, index) => (
                         // group-box
                         <div className="border rounded-2xl p-5 " key={index}>
-
-
                         {/* group name */}
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold mb-5 mt-2 ">{items?.group_name}</h2>
@@ -77,7 +76,7 @@ function DataBox({ data }) {
                                                 <td> <p className=" w-40 font-semibold">{item?.task}</p></td>
                                                 <td> <button
                                                     className="text-red-500  text-xs cursor-pointer"
-                                                    onClick={() => handleDelete(item._id, items._id)}>
+                                                    onClick={() => handleTaskDelete(item._id, items._id)}>
                                                     delete
                                                 </button></td>
                                                 <td> <button
