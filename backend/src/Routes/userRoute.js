@@ -159,6 +159,42 @@ userRouter.patch('/updatetask/:groupId/:taskId', async (req, res) => {
     }
 })
 
+userRouter.post('/moveTask/:gid/:tid' , async(req , res) => {
+    try{
+        const { gid , tid} = req.params;
+
+        if(!req?.body?.newGroupName)
+            return res.status(400).send('missing new groupName');
+
+        const {newGroupName} = req?.body;
+
+       const group = await TaskData.findById(gid);
+       
+       if(!group)
+        return res.status(404).send('group not found');
+       
+       const task = group?.allTask?.filter(item => item._id == tid);
+    //    console.log(task);
+
+       if(task.length === 0)
+        return res.status(404).send('task not found');
+
+       await TaskData.updateOne( {group_name: newGroupName} , { $push: { allTask: { task:task[0].task } } });
+
+
+       const result = group?.allTask?.filter(item => item._id != tid)
+        
+       await TaskData.findByIdAndUpdate( gid , {allTask:result});
+
+       res.status(200).send('groups updated sucessfully');
+       
+
+    }
+    catch(err){
+        res.status(400).send(`Error:  , ${err.message}`);
+    }
+})
+
 
 
 module.exports = userRouter;
