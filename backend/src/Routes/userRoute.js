@@ -123,10 +123,10 @@ userRouter.get('/getsingletask/:gid/:tid', async (req, res) => {
 })
 
 // updating task
-userRouter.patch('/updatetask/:taskId/:groupId', async (req, res) => {
+userRouter.patch('/updatetask/:groupId/:taskId', async (req, res) => {
 
     try {
-        const { taskId, groupId } = req?.params;
+        const { groupId, taskId } = req?.params;
 
 
         if (!taskId)
