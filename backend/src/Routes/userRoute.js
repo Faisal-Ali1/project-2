@@ -2,6 +2,8 @@ const express = require('express')
 const userRouter = express.Router();
 const TaskData = require('../Models/TaskSchema');
 
+
+// creating group and task
 userRouter.post('/create', async (req, res) => {
     try {
 
@@ -37,6 +39,7 @@ userRouter.post('/create', async (req, res) => {
     }
 })
 
+// fetching all data
 userRouter.get('/getall', async (req, res) => {
     try {
         const allGroupData = await TaskData.find({});
@@ -47,27 +50,19 @@ userRouter.get('/getall', async (req, res) => {
     }
 })
 
-userRouter.patch('/update', async (req, res) => {
+userRouter.get('/gettask/:id', async (req, res) => {
     try {
-        const { id } = req?.body
 
-        if (!id)
-            return res.status(404).send('id is missing');
-
-        const allTask = await TaskData.findById(id);
-
-        const res = allTask.filter((item) => item._id != id);
-
-        await TaskData.findByIdAndUpdate(id, { res })
-
-        await TaskData.updateOne({ group_name }, { $filter })
+        const { id } = req?.params;
+        const result = await TaskData.findById(id);
+        res.status(200).send(result)
     }
     catch (err) {
-        res.status(400).send(`Error: ${err.message}`)
+        res.status(400).send(`Error: ${err.message}`);
     }
 })
 
-// group delete
+// deleting group
 userRouter.delete('/delete/:id', async (req, res) => {
     try {
 
@@ -80,7 +75,7 @@ userRouter.delete('/delete/:id', async (req, res) => {
     }
 })
 
-// task delete
+// deleting task
 userRouter.post('/deletetask', async (req, res) => {
     try {
 
@@ -111,11 +106,28 @@ userRouter.post('/deletetask', async (req, res) => {
     }
 })
 
-userRouter.patch('/updatetask/:taskId/:groupId', async(req, res) => {
+// fetching only specific task 
+userRouter.get('/getsingletask/:gid/:tid', async (req, res) => {
+    try {
+        const { tid, gid } = req?.params;
+        
+        const group = await TaskData.findById(gid);
+        
+        const result = group?.allTask?.filter(item => item._id == tid);
+        res.status(200).send(result[0].task);
+
+    }
+    catch (err) {
+        res.status(400).send(`Error: ${err.message}`)
+    }
+})
+
+// updating task
+userRouter.patch('/updatetask/:taskId/:groupId', async (req, res) => {
 
     try {
         const { taskId, groupId } = req?.params;
-        
+
 
         if (!taskId)
             return res.status(400).send('id is missing');
@@ -128,16 +140,16 @@ userRouter.patch('/updatetask/:taskId/:groupId', async(req, res) => {
 
         const group = await TaskData.findById(groupId);
 
-         group?.allTask?.forEach(item => {
-            if(item._id == taskId){
+        group?.allTask?.forEach(item => {
+            if (item._id == taskId) {
                 item.task = newTask;
             }
-       });
+        });
 
-     const data =  await TaskData.updateOne( {_id:groupId }, { allTask: group.allTask});
+        const data = await TaskData.updateOne({ _id: groupId }, { allTask: group.allTask });
 
         res.status(200).json({
-            message:"Sucessfully updated",
+            message: "Sucessfully updated",
             data: data
         });
 
@@ -150,3 +162,23 @@ userRouter.patch('/updatetask/:taskId/:groupId', async(req, res) => {
 
 
 module.exports = userRouter;
+
+// userRouter.patch('/update', async (req, res) => {
+//     try {
+//         const { id } = req?.body
+
+//         if (!id)
+//             return res.status(404).send('id is missing');
+
+//         const allTask = await TaskData.findById(id);
+
+//         const res = allTask.filter((item) => item._id != id);
+
+//         await TaskData.findByIdAndUpdate(id, { res })
+
+//         await TaskData.updateOne({ group_name }, { $filter })
+//     }
+//     catch (err) {
+//         res.status(400).send(`Error: ${err.message}`)
+//     }
+// })
