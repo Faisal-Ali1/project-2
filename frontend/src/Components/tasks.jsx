@@ -85,7 +85,7 @@ function TaskCreate({ data }) {
         <>
 
             {/* group-box */}
-            <div className="border rounded-2xl p-5 shadow-xl relative">
+            <div className="border border-gray-300 rounded-2xl p-5 shadow-xl relative">
                 {/* group name */}
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold mb-5 mt-2 ">{data?.items?.group_name}</h2>

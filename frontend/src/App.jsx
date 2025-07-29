@@ -29,7 +29,7 @@ function App() {
   return (
     <>
       <div className="">
-        <div className=" pb-10 absolute fixed w-full bg-white z-99">
+        <div className=" pb-10  fixed w-full bg-white z-99">
           <h1 className="text-3xl font-bold text-center">Project-2</h1>
 
 

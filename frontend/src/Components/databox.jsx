@@ -66,7 +66,7 @@ function DataBox({ data }) {
     
     return (
         <>
-            <div className=" flex gap-10 flex-wrap justify-center p-10 text-center border relative">
+            <div className=" flex gap-10 flex-wrap justify-center p-10 text-center relative">
                 {
                     // Task updation pop-up box
                     isTaskUpdate ? (
